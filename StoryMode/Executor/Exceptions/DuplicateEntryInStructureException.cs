@@ -1,16 +1,22 @@
-﻿namespace Executor.Exceptions
-{
-    using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;   
 
+namespace Executor.Exceptions
+{
     class DuplicateEntryInStructureException : Exception
     {
-        public const string DuplicateEntry = "The {0} already exists in {1}.";
+        private const string DuplicateEntry = "The {0} already exists in {1}.";
 
-        public DuplicateEntryInStructureException(string entry, string structure) : base(string.Format(DuplicateEntry, entry, structure))
+        public DuplicateEntryInStructureException(string message)
+            :base(message)
         {
         }
 
-        public DuplicateEntryInStructureException(string message) : base(message)
+        public DuplicateEntryInStructureException(string entry, string structure) 
+            : base(string.Format(DuplicateEntry, entry, structure))
         {
         }
     }

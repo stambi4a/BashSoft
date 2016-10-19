@@ -1,38 +1,40 @@
-﻿using System;
+﻿using Executor.IO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Executor
+namespace Executor.Repository
 {
-    public class RepositorySorter
-    {
-        public void OrderAndTake(Dictionary<string, double> studentsWithMarks,
-            string comparison, int studentsToTake)
+    using Executor.Interfaces;
+    public class RepositorySorter : IDataSorter
+    {                                                
+        public void PrintSortedStudents(Dictionary<string, double> studentsMarks,
+          string comparison, int studentsToTake)
         {
             comparison = comparison.ToLower();
             if (comparison == "ascending")
-            {    
-                this.PrintStudents(studentsWithMarks.OrderBy(x => x.Value)
+            {
+                this.PrintStudents(studentsMarks.OrderBy(x => x.Value)
                                         .Take(studentsToTake)
-                                        .ToDictionary(pair => pair.Key, pair => pair.Value)); 
+                                        .ToDictionary(pair => pair.Key, pair => pair.Value));
             }
             else if (comparison == "descending")
-            {  
-                PrintStudents(studentsWithMarks.OrderByDescending(x => x.Value)
+            {
+                this.PrintStudents(studentsMarks.OrderByDescending(x => x.Value)
                                         .Take(studentsToTake)
                                         .ToDictionary(pair => pair.Key, pair => pair.Value));
             }
             else
-            {
+            {                            
                 throw new ArgumentException(ExceptionMessages.InvalidComparisonQuery);
             }
         }
-
-        private void PrintStudents(Dictionary<string, double> studentsWithMarks)
+                                  
+        private void PrintStudents(Dictionary<string, double> studentsSorted)
         {
-            foreach (KeyValuePair<string, double> keyValuePair in studentsWithMarks)
+            foreach (KeyValuePair<string, double> keyValuePair in studentsSorted)
             {
-                OutputWriter.PrintStudent(keyValuePair);
+                OutputWriter.WriteMessageOnNewLine(string.Format($"{keyValuePair.Key} - {keyValuePair.Value}"));
             }
         }
     }

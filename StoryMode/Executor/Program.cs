@@ -1,22 +1,26 @@
 ﻿using System;
+using Executor.Network;
+using Executor.IO;
+using Executor.Judge;
+using Executor.Repository;
 
 namespace Executor
 {
-    using Executor.Network;
+    using Executor.Interfaces;
 
     class Program
     {
         static void Main()
-        {
-            Tester tester = new Tester();
-            DownloadManager downloadManager = new DownloadManager();
-            IOManager inputOutputManager = new IOManager();
-            StudentsRepository repo = new StudentsRepository(new RepositorySorter(), new RepositioryFilter());
-            CommandInterpreter currentInterpreter = new CommandInterpreter(tester, repo, downloadManager, inputOutputManager);
-            InputReader reader = new InputReader(currentInterpreter);
-            Console.WindowWidth = 150;
-            reader.StartReadingCommands();       
-                              
+        {                  
+            IContentComparer tester = new Tester();
+            IDownloadManager downloadManager = new DownloadManager();
+            IDirectoryManager ioManager = new IOManager();
+            IDatabase repo = new StudentsRepository(new RepositorySorter(), new RepositioryFilter());
+
+            IInterpreter currentInterpreter = new CommandInterpreter(tester, repo, downloadManager, ioManager);
+            IInputReader reader = new InputReader(currentInterpreter);
+
+            reader.StartReadingCommands();
         }
     }
 }

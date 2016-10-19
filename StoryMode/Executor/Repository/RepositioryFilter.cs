@@ -1,26 +1,28 @@
-﻿using System;
+﻿using Executor.IO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Executor
+namespace Executor.Repository
 {
-    public class RepositioryFilter
+    using Executor.Interfaces;
+    public class RepositioryFilter : IDataFilter
     {
-        public void FilterAndTake(Dictionary<string, double> studentsWithMarks, string wantedFilter, int studentsToTake)
+        public void PrintFilteredStudents(Dictionary<string, double> studentsWithMarks, string wantedFilter, int studentsToTake)
         {
             if (wantedFilter == "excellent")
             {
-                FilterAndTake(studentsWithMarks, x => x >= 5, studentsToTake);
+                this.FilterAndTake(studentsWithMarks, x => x >= 5, studentsToTake);
             }
             else if (wantedFilter == "average")
             {
-                FilterAndTake(studentsWithMarks, x => x < 5 && x >= 3.5, studentsToTake);
+                this.FilterAndTake(studentsWithMarks, x => x < 5 && x >= 3.5, studentsToTake);
             }
             else if (wantedFilter == "poor")
             {
-                FilterAndTake(studentsWithMarks, x => x < 3.5, studentsToTake);
+                this.FilterAndTake(studentsWithMarks, x => x < 3.5, studentsToTake);
             }
             else
             {
@@ -37,13 +39,13 @@ namespace Executor
                 {
                     break;
                 }
-            
+
                 if (givenFilter(studentMark.Value))
                 {
-                    OutputWriter.PrintStudent(new KeyValuePair<string, double>(studentMark.Key, studentMark.Value));     
+                    OutputWriter.WriteMessageOnNewLine(string.Format($"{studentMark.Key} - {studentMark.Value}"));
                     counterForPrinted++;
                 }
             }
-        }              
+        }
     }
 }

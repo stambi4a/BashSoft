@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace Executor.Network
+﻿namespace Executor.Network
 {
-    using Executor.Exceptions;
+    using System.Net;
+    using System.Threading.Tasks;
 
-    public class DownloadManager
+    using Executor.Exceptions;
+    using Executor.Interfaces;
+    using Executor.IO;
+
+    public class DownloadManager : IDownloadManager
     {
         private WebClient webClient;
 
@@ -25,22 +22,23 @@ namespace Executor.Network
             {
                 OutputWriter.WriteMessageOnNewLine("Started downloading: ");
 
-                string nameOfFile = ExtractNameOfFile(fileURL);
+                string nameOfFile = this.ExtractNameOfFile(fileURL);
                 string pathToDownload = SessionData.currentPath + "/" + nameOfFile;
 
-                webClient.DownloadFile(fileURL, pathToDownload);
+                this.webClient.DownloadFile(fileURL, pathToDownload);
 
                 OutputWriter.WriteMessageOnNewLine("Download complete");
             }
-            catch (WebException ex)
+            catch (WebException)
             {
-                OutputWriter.DisplayException(ex.Message);
+                throw new InvalidPathException();
             }
+
         }
 
         public void DownloadAsync(string fileURL)
         {
-            Task currentTask = Task.Run(() => Download(fileURL));
+            Task currentTask = Task.Run(() => this.Download(fileURL));
             SessionData.taskPool.Add(currentTask);
         }
 

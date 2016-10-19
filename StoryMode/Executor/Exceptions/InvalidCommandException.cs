@@ -1,12 +1,17 @@
-﻿namespace Executor.Exceptions
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Executor.Exceptions
 {
-    using System;
-
-    public class InvalidCommandException : Exception
+    class InvalidCommandException : Exception
     {
-        public const string InvalidCommandMessage = "The commandName '{0}' is invalid";
+        private const string InvalidCommandMessage = "The command {0} is invalid.";
 
-        public InvalidCommandException(string input) : base(string.Format(InvalidCommandMessage, input))
+        public InvalidCommandException(string input)
+            : base(string.Format(InvalidCommandMessage, input))
         {
         }
     }

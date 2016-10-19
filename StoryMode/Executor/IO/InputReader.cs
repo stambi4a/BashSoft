@@ -2,15 +2,17 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Executor
+namespace Executor.IO
 {
-    public class InputReader
+    using Executor.Interfaces;
+
+    public class InputReader : IInputReader
     {
         private const string endCommand = "quit";
 
-        private CommandInterpreter interpreter;
+        private IInterpreter interpreter;
 
-        public InputReader(CommandInterpreter interpreter)
+        public InputReader(IInterpreter interpreter)
         {
             this.interpreter = interpreter;
         }

@@ -1,16 +1,22 @@
-﻿namespace Executor.Exceptions
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Executor.Exceptions
 {
-    using System;
-
-    public class InvalidStringException : Exception
+    class InvalidStringException : Exception
     {
-        public const string NullOrEmptyValue = "The value of the variable CANNOT be null or empty!";
+        private const string NullOrEmptyValue = "The value of the variable CANNOT be null or empty!";
 
-        public InvalidStringException() : base(NullOrEmptyValue)
-        {
+        public InvalidStringException()
+            :base(NullOrEmptyValue)
+        {                         
         }
 
-        public InvalidStringException(string message) : base(message)
+        public InvalidStringException(string message)
+            : base(message)
         {
         }
     }

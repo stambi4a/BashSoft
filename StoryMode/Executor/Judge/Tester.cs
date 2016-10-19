@@ -1,34 +1,33 @@
 ﻿using System;
 using System.IO;
+using Executor.Exceptions;
+using Executor.IO;
 
-namespace Executor
+namespace Executor.Judge
 {
-    using Executor.Exceptions;
-
-    public class Tester
+    using Executor.Interfaces;
+    public class Tester : IContentComparer
     {
         public void CompareContent(string userOutputPath, string expectedOutputPath)
         {
-            OutputWriter.WriteMessageOnNewLine("Reading files...");
-
             try
             {
-                string mismatchPath = GetMismatchPath(expectedOutputPath);
-
+                OutputWriter.WriteMessageOnNewLine("Reading files...");
+                string mismatchPath = this.GetMismatchPath(expectedOutputPath);
                 string[] actualOutputLines = File.ReadAllLines(userOutputPath);
                 string[] expectedOutputLines = File.ReadAllLines(expectedOutputPath);
 
                 bool hasMismatch;
-                string[] mismatches = GetLinesWithPossibleMismatches(
+                string[] mismatches = this.GetLinesWithPossibleMismatches(
                     actualOutputLines, expectedOutputLines, out hasMismatch);
 
-                PrintOutput(mismatches, hasMismatch, mismatchPath);
+                this.PrintOutput(mismatches, hasMismatch, mismatchPath);
                 OutputWriter.WriteMessageOnNewLine("Files read!");
             }
             catch (IOException)
-            {
+            {        
                 throw new InvalidPathException();
-            }
+            }  
         }
 
         private string[] GetLinesWithPossibleMismatches(
@@ -39,13 +38,14 @@ namespace Executor
 
             OutputWriter.WriteMessageOnNewLine("Comparing files...");
 
-           int minOutputLines = actualOutputLines.Length;
-           if (actualOutputLines.Length != expectedOutputLines.Length)
-           {
-               hasMismatch = true;
-               minOutputLines = Math.Min(actualOutputLines.Length, expectedOutputLines.Length);
-               OutputWriter.DisplayException(ExceptionMessages.ComparisonOfFilesWithDifferentSizes);
-           }
+            int minOutputLines = actualOutputLines.Length;
+            if (actualOutputLines.Length != expectedOutputLines.Length)
+            {
+                hasMismatch = true;
+                minOutputLines = Math.Min(actualOutputLines.Length, expectedOutputLines.Length);
+                OutputWriter.DisplayException(ExceptionMessages.ComparisonOfFilesWithDifferentSizes);
+            }
+
             string[] mismatches = new string[minOutputLines];
 
             for (int index = 0; index < minOutputLines; index++)
@@ -81,7 +81,6 @@ namespace Executor
                 }
 
                 File.WriteAllLines(mismatchesPath, mismatches);
-                
                 return;
             }
 

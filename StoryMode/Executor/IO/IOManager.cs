@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Executor.Exceptions;
 
-namespace Executor
+namespace Executor.IO
 {
-    using Executor.Exceptions;
-
-    public class IOManager
+    using Executor.Interfaces;
+    public class IOManager : IDirectoryManager
     {
         public void TraverseDirectory(int depth)
         {
@@ -38,14 +38,13 @@ namespace Executor
                             OutputWriter.WriteMessage("-");
                         }
 
-                        OutputWriter.WriteMessageOnNewLine(file.ToString());
+                        OutputWriter.WriteMessageOnNewLine(file.Substring(indexOfLastSlash));
                     }
 
                     foreach (string directoryPath in Directory.GetDirectories(currentPath))
                     {
                         subFolders.Enqueue(directoryPath);
                     }
-
                 }
                 catch (UnauthorizedAccessException)
                 {
@@ -62,7 +61,7 @@ namespace Executor
                 Directory.CreateDirectory(path);
             }
             catch (ArgumentException)
-            {
+            {                                                                       
                 throw new InvalidFileNameException();
             }
         }
@@ -82,13 +81,12 @@ namespace Executor
                 {
                     throw new InvalidPathException();
                 }
-
             }
             else
             {
                 string currentPath = SessionData.currentPath;
                 currentPath += "\\" + relativePath;
-                ChangeCurrentDirectoryAbsolute(currentPath);
+                this.ChangeCurrentDirectoryAbsolute(currentPath);
             }
         }
 
